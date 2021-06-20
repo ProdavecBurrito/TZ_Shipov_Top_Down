@@ -5,6 +5,8 @@ public class EnemyView : MonoBehaviour, IEnemy
 {
     public event Action OnDie = delegate () { };
 
+    [SerializeField] private Collider _collider;
+
     private Rigidbody[] _ragDollRigidbodies;
     private Animator _animator;
 
@@ -14,11 +16,7 @@ public class EnemyView : MonoBehaviour, IEnemy
         _animator.enabled = true;
 
         _ragDollRigidbodies = GetComponentsInChildren<Rigidbody>();
-        for (int i = 0; i < _ragDollRigidbodies.Length; i++)
-        {
-            _ragDollRigidbodies[i].isKinematic = true;
-            _ragDollRigidbodies[i].mass = 1000;
-        }
+        Resurrect();
     }
 
     public void Die()
@@ -29,6 +27,7 @@ public class EnemyView : MonoBehaviour, IEnemy
             item.isKinematic = false;
         }
         _animator.enabled = false;
+        _collider.enabled = false;
     }
 
     public void SetActivity(bool isActive)
@@ -44,5 +43,6 @@ public class EnemyView : MonoBehaviour, IEnemy
         }
         transform.rotation = Quaternion.identity;
         _animator.enabled = true;
+        _collider.enabled = true;
     }
 }

@@ -2,11 +2,18 @@
 
 public class PlayerAnimationController
 {
-    public Animator _animator;
+    private Animator _animator;
+
+    public Animator Animator => _animator;
 
     public PlayerAnimationController(Animator animator)
     {
         _animator = animator;
+    }
+
+    public void SetFloat(string name, float value)
+    {
+        _animator.SetFloat(name, value);
     }
 
     public void SetAnimationTrigger(string triggerName)

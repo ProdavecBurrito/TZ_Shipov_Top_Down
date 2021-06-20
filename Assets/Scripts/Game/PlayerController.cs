@@ -12,6 +12,7 @@ public class PlayerController : IUpdate, ILateUpdate, IDisposable
     private RaycastHit _hit;
     private Vector3 _pointToLook;
     private Vector3 _rotationVector;
+    private LayerMask _layerMask;
 
     private bool _isCanFinisingOff;
     private bool _isCanMove;
@@ -25,6 +26,7 @@ public class PlayerController : IUpdate, ILateUpdate, IDisposable
         _camera = Camera.main;
         _animationController = new PlayerAnimationController(_playerView.Animator);
         _uiText = uiText;
+        _layerMask = LayerMask.GetMask("Ground");
 
         _playerView.CanFinishing += FinishOff;
         _playerView.CantFinishing += CantFinishOff;
@@ -54,7 +56,7 @@ public class PlayerController : IUpdate, ILateUpdate, IDisposable
             {
                 _playerView.transform.Translate(MovementVector(Vector3.forward + Vector3.left, true), Space.World);
                 _animationController.SetAnimationTrigger("Run");
-                _animationController._animator.SetFloat("Direction", -0.5f);
+                _animationController.SetFloat("Direction", -0.5f);
                 return;
                 
             }
@@ -62,49 +64,49 @@ public class PlayerController : IUpdate, ILateUpdate, IDisposable
             {
                 _playerView.transform.Translate(MovementVector(Vector3.forward + Vector3.right, true), Space.World);
                 _animationController.SetAnimationTrigger("Run");
-                _animationController._animator.SetFloat("Direction", 0.5f);
+                _animationController.SetFloat("Direction", 0.5f);
                 return;
             }
             if (Input.GetKey(KeyCode.S) && Input.GetKey(KeyCode.D))
             {
                 _playerView.transform.Translate(MovementVector(-Vector3.forward + Vector3.left, true), Space.World);
                 _animationController.SetAnimationTrigger("RunBack");
-                _animationController._animator.SetFloat("Direction", 0.5f);
+                _animationController.SetFloat("Direction", 0.5f);
                 return;
             }
             if (Input.GetKey(KeyCode.S) && Input.GetKey(KeyCode.A))
             {
                 _playerView.transform.Translate(MovementVector(-Vector3.forward + Vector3.right, true), Space.World);
                 _animationController.SetAnimationTrigger("RunBack");
-                _animationController._animator.SetFloat("Direction", -0.5f);
+                _animationController.SetFloat("Direction", -0.5f);
                 return;
             }
             if (Input.GetKey(KeyCode.W))
             {
                 _playerView.transform.Translate(MovementVector(Vector3.forward, false), Space.World);
                 _animationController.SetAnimationTrigger("Run");
-                _animationController._animator.SetFloat("Direction", 0);
+                _animationController.SetFloat("Direction", 0);
                 return;
             }
             if (Input.GetKey(KeyCode.S))
             {
                 _playerView.transform.Translate(MovementVector(-Vector3.forward, false), Space.World);
                 _animationController.SetAnimationTrigger("RunBack");
-                _animationController._animator.SetFloat("Direction", 0);
+                _animationController.SetFloat("Direction", 0);
                 return;
             }
             if (Input.GetKey(KeyCode.D))
             {
                 _playerView.transform.Translate(MovementVector(Vector3.left, false), Space.World);
                 _animationController.SetAnimationTrigger("Run");
-                _animationController._animator.SetFloat("Direction", -1);
+                _animationController.SetFloat("Direction", -1);
                 return;
             }
             if (Input.GetKey(KeyCode.A))
             {
                 _playerView.transform.Translate(MovementVector(Vector3.right, false), Space.World);
                 _animationController.SetAnimationTrigger("Run");
-                _animationController._animator.SetFloat("Direction", 1);
+                _animationController.SetFloat("Direction", 1);
                 return;
             }
         }
@@ -179,7 +181,7 @@ public class PlayerController : IUpdate, ILateUpdate, IDisposable
     {
         if (_isCanMove)
         {
-            if (Physics.Raycast(_camera.ScreenPointToRay(Input.mousePosition), out _hit, 100f))
+            if (Physics.Raycast(_camera.ScreenPointToRay(Input.mousePosition), out _hit, 100f, _layerMask))
             {
                 _pointToLook = _hit.point;
                 _rotationVector = Vector3.ProjectOnPlane(_playerView.RotatingPart.position - _pointToLook, Vector3.up);
